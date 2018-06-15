@@ -1,10 +1,7 @@
 #include <Arduino.h>
 
-#ifndef LED_BUILTIN
-  #define LED_BUILTIN 13
-#endif
-#define WATER_PUMP_PIN 14
-#define AIR_PUMP_PIN 15
+#define WATER_PUMP_PIN 11
+#define AIR_PUMP_PIN 12
 
 long time_for_each_cycle = 10 * 60 * 1000L; // 10 min
 
@@ -62,9 +59,13 @@ void setup() {
 
   Serial.begin(9600);
   Serial.println("Setup done");
+  Serial.print("Water Pump pin = ");
+  Serial.print(WATER_PUMP_PIN);
+  Serial.print(" ; Air pump pin = ");
+  Serial.println(AIR_PUMP_PIN);
 
-  water_pump(HIGH);
-  air_pump(HIGH);
+  water_pump(LOW);
+  air_pump(LOW);
   start_new_cycle();
 }
 
@@ -75,16 +76,16 @@ void loop() {
 
   if (time_since_cyle_begin - water_pump_start_after_cycle_begin > 0 &&
     time_since_cyle_begin - (water_pump_start_after_cycle_begin + water_pump_activation_duration) < 0) {
-    water_pump(LOW);
-  } else {
     water_pump(HIGH);
+  } else {
+    water_pump(LOW);
   }
 
   if (time_since_cyle_begin - air_pump_start_after_cycle_begin > 0 &&
     time_since_cyle_begin - (air_pump_start_after_cycle_begin + air_pump_activation_duration) < 0) {
-    air_pump(LOW);
-  } else {
     air_pump(HIGH);
+  } else {
+    air_pump(LOW);
   }
 
   if (time_since_cyle_begin - time_for_each_cycle > 0) {
